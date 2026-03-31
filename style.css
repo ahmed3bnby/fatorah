@@ -19,7 +19,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: 'Inter', 'Cairo', -apple-system, sans-serif;
     background: var(--bg);
     color: var(--dark);
     padding: 40px 20px 80px;
@@ -79,7 +79,7 @@ body {
 .inv-header__brand { display: flex; align-items: center; gap: 16px; }
 .inv-logo { width: 200px; height: auto; object-fit: contain; }
 .inv-brand-name {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Cairo', sans-serif;
     font-size: 24px;
     font-weight: 800;
     color: var(--maroon);
@@ -97,19 +97,19 @@ body {
     display: flex;
     justify-content: flex-start;
     align-items: baseline;
-    gap: 14px;
-    margin-bottom: 4px;
+    gap: 8px;
+    margin-bottom: 1px;
 }
 .meta-label {
-    font-size: 10px;
+    font-size: 8px;
     text-transform: uppercase;
     letter-spacing: .8px;
     color: var(--grey-light);
     font-weight: 600;
-    width: 110px;
+    width: 80px;
 }
 .meta-val {
-    font-size: 15px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--maroon);
     text-align: left;
@@ -495,4 +495,34 @@ body {
     body { background: white; padding: 0; }
     .invoice { box-shadow: none; margin: 0; width: 100%; min-height: 100vh; }
     .no-print, .col-del { display: none !important; }
+}
+
+/* ── Print Overrides ── */
+@media print {
+    body {
+        background: #fff;
+        padding: 0;
+        margin: 0;
+        display: block;
+    }
+    .toolbar, .no-print {
+        display: none !important;
+    }
+    #invoice-container {
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border: none;
+        width: 100% !important;
+    }
+    .inv-card {
+        padding: 0;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    /* Force background colors */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
 }
