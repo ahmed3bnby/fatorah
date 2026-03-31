@@ -135,42 +135,33 @@ document.addEventListener('DOMContentLoaded', () => {
         if (el) el.innerHTML = `${val} <small>AED</small>`;
     }
 
-    // ── PDF Generation ──
+    // ── PDF Generation (Native Print) ──
     generatePdfBtn.addEventListener('click', () => {
-        document.activeElement.blur();
-        const el = document.getElementById('invoice-container');
-        const id = document.getElementById('invoice-id').textContent.trim();
-
-        // Hide non-print elements
-        document.querySelectorAll('.no-print').forEach(e => e.style.display = 'none');
-        // Remove hover/focus outlines
-        document.querySelectorAll('[contenteditable]').forEach(e => e.blur());
-
-        // Use a small delay to let styles settle
-        setTimeout(() => {
-            const opt = {
-                margin: [0, 0, 0, 0],
-                filename: `${id}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false,
-                    letterRendering: true,
-                    scrollX: 0,
-                    scrollY: -window.scrollY
-                },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-            };
-
-            html2pdf().from(el).set(opt).save().then(() => {
-                document.querySelectorAll('.no-print').forEach(e => e.style.display = '');
-            });
-        }, 100);
+        // Blur active fields to remove outlines
+        if (document.activeElement) document.activeElement.blur();
+        
+        // Use browser print
+        window.print();
     });
 
 
     // Initial calc
     recalc();
+
+    // ── Auto-generate Fields ──
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-GB').replace(/\//g, '-'); // DD-MM-YYYY
+    const yy = now.getFullYear().toString().slice(-2);
+    const mm = (now.getMonth() + 1).toString().padStart(2, '0');
+    const dd = now.getDate().toString().padStart(2, '0');
+    const dateCode = `${yy}${mm}${dd}`;
+    const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+
+    const invoiceIdEl = document.getElementById('invoice-id');
+    const invoiceDateEl = document.getElementById('invoice-date');
+    const studentIdEl = document.getElementById('student-id');
+
+    if (invoiceIdEl) invoiceIdEl.textContent = `INV-DXB-${dateCode}-${rand}`;
+    if (invoiceDateEl) invoiceDateEl.textContent = dateStr;
+    if (studentIdEl) studentIdEl.textContent = `STU-${dateCode}-${rand}`;
 });
