@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Zad Institute Invoice Generator</title>
+    <link rel="stylesheet" href="login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-header">
+            <img src="assets/logo.png" alt="Zad Institute Logo" class="login-logo">
+            <h1>Zad Institute</h1>
+            <p>Education Support Services</p>
+        </div>
+        <div class="login-body">
+            <p class="login-instruction">Please enter your password to access the invoice generator.</p>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password" autofocus>
+                <div id="error-msg" class="error-msg">Incorrect password. Please try again.</div>
+            </div>
+            <button id="login-btn" class="login-btn">Access Dashboard</button>
+        </div>
+        <div class="login-footer">
+            &copy; 2026 Zad Institute. All rights reserved.
+        </div>
+    </div>
+    <script src="login.js"></script>
+</body>
+</html>

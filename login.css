@@ -1,0 +1,108 @@
+:root {
+    --maroon: #8B1A1A;
+    --dark: #231F20;
+    --grey: #58595B;
+    --white: #FFFFFF;
+    --bg: #F4F5F7;
+    --error: #D32F2F;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-card {
+    background: var(--white);
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.login-logo {
+    width: 120px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.login-header h1 {
+    font-size: 24px;
+    color: var(--maroon);
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.login-header p {
+    font-size: 14px;
+    color: var(--grey);
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.login-instruction {
+    font-size: 13px;
+    color: var(--grey);
+    margin-bottom: 20px;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+input[type="password"] {
+    width: 100%;
+    padding: 14px 20px;
+    border: 1.5px solid #E0E0E0;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+input[type="password"]:focus {
+    border-color: var(--maroon);
+    box-shadow: 0 0 0 4px rgba(139, 26, 26, 0.1);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--maroon);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(139, 26, 26, 0.2);
+}
+
+.login-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.error-msg {
+    color: var(--error);
+    font-size: 12px;
+    margin-top: 8px;
+    font-weight: 600;
+    display: none;
+}
+
+.login-footer {
+    margin-top: 40px;
+    font-size: 11px;
+    color: #AAA;
+}

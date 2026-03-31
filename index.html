@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zad Institute - Tax Invoice</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        if (localStorage.getItem('zad_auth_session') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Toolbar -->
+    <div class="toolbar no-print">
+        <div class="toolbar-inner">
+            <button id="add-row" class="btn btn-dark">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                Add Item
+            </button>
+            <button id="generate-pdf" class="btn btn-maroon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 13h8M8 3v7M5 7l3 3 3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Generate PDF
+            </button>
+            <button id="logout-btn" class="btn btn-dark" title="Logout">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Invoice -->
+    <div id="invoice-container" class="invoice">
+
+        <!-- Header -->
+        <header class="inv-header">
+            <div class="inv-header__meta">
+                <div class="meta-row">
+                    <span class="meta-label">Tax Invoice #</span>
+                    <span class="meta-val" contenteditable="true" id="invoice-id">INV-DXB-2903-00009</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Date</span>
+                    <span class="meta-val" contenteditable="true" id="invoice-date">29-03-2026</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">TRN</span>
+                    <span class="meta-val" contenteditable="true">100234567890003</span>
+                </div>
+            </div>
+            <div class="inv-header__brand">
+                <img src="assets/logo.png" alt="Zad Institute" class="inv-logo">
+            </div>
+        </header>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Billing Info -->
+        <section class="inv-billing">
+            <div class="inv-billing__from">
+                <div class="billing-content" contenteditable="true">
+                    <p><strong>Zad Institute Education Support Services</strong></p>
+                    <p>Fujairah Branch</p>
+                    <p>Burj Al Awadhi Business Tower</p>
+                    <p>Sheikh Hamad Bin Abdullah Street</p>
+                    <p>Office 1408 – Floor 14</p>
+                    <p>United Arab Emirates – Fujairah, AE</p>
+                    <p>Phone: +971 50 608 8505</p>
+                    <p>Email: info@zadinstitute.ae</p>
+                </div>
+            </div>
+            <div class="inv-billing__to">
+                <div class="to-fields">
+                    <div class="to-row">
+                        <span class="to-label">Student Name:</span>
+                        <span class="to-val" contenteditable="true">[Enter Name]</span>
+                    </div>
+                    <div class="to-row">
+                        <span class="to-label">Student ID:</span>
+                        <span class="to-val" contenteditable="true">STU-230226-c7f98790</span>
+                    </div>
+                    <div class="to-row">
+                        <span class="to-label">Email:</span>
+                        <span class="to-val" contenteditable="true">Aleisak66@gmail.com</span>
+                    </div>
+                    <div class="to-row">
+                        <span class="to-label">Phone:</span>
+                        <span class="to-val" contenteditable="true">+971509334242</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Items Table -->
+        <table class="inv-table" id="items-table">
+            <thead>
+                <tr>
+                    <th class="col-desc">Description</th>
+                    <th class="col-price">Unit Price</th>
+                    <th class="col-qty">Qty</th>
+                    <th class="col-disc">Discount</th>
+                    <th class="col-vat">VAT</th>
+                    <th class="col-amt">Amount</th>
+                    <th class="col-del no-print"></th>
+                </tr>
+            </thead>
+            <tbody id="invoice-body">
+                <tr>
+                    <td class="col-desc" contenteditable="true">Training Course in Family Counseling</td>
+                    <td class="col-price"><span class="num" contenteditable="true">1142</span><span class="cur">AED</span></td>
+                    <td class="col-qty" contenteditable="true">1</td>
+                    <td class="col-disc"><span class="num" contenteditable="true">0</span><span class="cur">AED</span></td>
+                    <td class="col-vat"><span class="num vat-val">57</span><span class="cur">AED</span></td>
+                    <td class="col-amt"><span class="num total-val">1200</span><span class="cur">AED</span></td>
+                    <td class="col-del no-print"><button class="btn-x" title="Remove">&times;</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Summary -->
+        <div class="inv-summary">
+            <div class="summary-left"></div>
+            <div class="summary-right">
+                <div class="sum-row">
+                    <span>Paid</span>
+                    <span id="paid-amount">1200.00 <small>AED</small></span>
+                </div>
+                <div class="sum-row sum-remaining">
+                    <span>Remaining</span>
+                    <span id="remaining-amount">0.00 <small>AED</small></span>
+                </div>
+                <div class="sum-row sum-status">
+                    <span>Status</span>
+                    <span class="badge-paid">PAID</span>
+                </div>
+                <div class="sum-row" id="total-row">
+                    <span>Total Amount</span>
+                    <span id="subtotal">1200.00 <small>AED</small></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Method -->
+        <section class="inv-payment-method">
+            <h3 class="section-heading">Payment Method <span class="required-hint">(required)</span></h3>
+            <div class="payment-options" id="payment-options">
+                <label class="pay-option">
+                    <input type="radio" name="payment" value="cash">
+                    <span class="pay-check">✓</span>
+                    <span class="pay-icon">💵</span>
+                    <span class="pay-text">Cash</span>
+                </label>
+                <label class="pay-option">
+                    <input type="radio" name="payment" value="visa">
+                    <span class="pay-check">✓</span>
+                    <span class="pay-icon">💳</span>
+                    <span class="pay-text">Visa / Card</span>
+                </label>
+                <label class="pay-option">
+                    <input type="radio" name="payment" value="bank">
+                    <span class="pay-check">✓</span>
+                    <span class="pay-icon">🏦</span>
+                    <span class="pay-text">Bank Transfer</span>
+                </label>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="inv-footer">
+            <div class="inv-footer__terms">
+                <h4>Payment Terms & Conditions:</h4>
+                <p>Full fees must be paid before the course starts. In case of retraction from the course, fees are refundable only during 48 hours from the registration date, exclusive of 25% course fees plus registration fees. Paid fees are non-refundable in case of retraction from the course for whatever reason.</p>
+            </div>
+            <div class="inv-footer__sig">
+                <p class="sig-title">Authorized Signature</p>
+                <img src="assets/logo.png" alt="Seal" class="sig-seal">
+                <div class="sig-line"></div>
+                <p class="sig-thanks">Thank you for your business!</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
