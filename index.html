@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zad Institute - Tax Invoice</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cairo:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        // Auth check happens in script.js now using Firebase
+    </script>
+</head>
+<body>
+
+    <!-- Toolbar -->
+    <div class="toolbar no-print">
+        <div class="toolbar-inner">
+            <button id="add-row" class="btn btn-dark">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                Add Item
+            </button>
+            <button id="new-invoice" class="btn btn-green">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                New
+            </button>
+            <button id="generate-pdf" class="btn btn-maroon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 13h8M8 3v7M5 7l3 3 3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Generate PDF
+            </button>
+            <button id="save-invoice" class="btn btn-dark">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Save
+            </button>
+            <button id="history-btn" class="btn btn-dark">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                History
+            </button>
+            <button id="logout-btn" class="btn btn-dark" title="Logout">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Invoice -->
+    <div id="invoice-container" class="invoice">
+
+        <!-- Header -->
+        <header class="inv-header">
+            <div class="inv-header__meta">
+                <div class="meta-row">
+                    <span class="meta-label">Tax Invoice #</span>
+                    <span id="invoice-id" class="meta-val" contenteditable="true">[NEW]</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Date</span>
+                    <span id="invoice-date" class="meta-val" contenteditable="true"></span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">TRN</span>
+                    <span class="meta-val" contenteditable="true" style="color:var(--maroon);">100234567890003</span>
+                </div>
+            </div>
+            <div class="inv-header__brand">
+                <img src="assets/logo.png" alt="Zad Institute" class="inv-logo">
+            </div>
+        </header>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Billing Info -->
+        <section class="inv-billing">
+            <div class="inv-billing__from">
+                <div class="billing-content" contenteditable="true">
+                    <p><strong>Zad Institute Education Support Services</strong></p>
+                    <p>Fujairah Branch</p>
+                    <p>Burj Al Awadhi Business Tower</p>
+                    <p>Sheikh Hamad Bin Abdullah Street</p>
+                    <p>Office 1408 – Floor 14</p>
+                    <p>United Arab Emirates – Fujairah, AE</p>
+                    <p>Phone: +971 50 608 8505</p>
+                    <p>Email: info@zadinstitute.ae</p>
+                </div>
+            </div>
+            <div class="inv-billing__to">
+                <div class="to-fields">
+                    <div class="to-row">
+                        <span class="to-label">Student Name:</span>
+                        <span class="to-val" contenteditable="true">[Enter Name]</span>
+                    </div>
+                    <div class="to-row">
+                        <span class="to-label">Student ID:</span>
+                        <span id="student-id" class="to-val" contenteditable="true">STU-000000</span>
+                    </div>
+                    <div class="to-row">
+                        <span class="to-label">Email:</span>
+                        <span class="to-val" contenteditable="true">Email</span>
+                    </div>
+                    <div class="to-row">
+                        <span class="to-label">Phone:</span>
+                        <span class="to-val" contenteditable="true">Phone</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Items Table -->
+        <table class="inv-table" id="items-table">
+            <thead>
+                <tr>
+                    <th class="col-desc">Description</th>
+                    <th class="col-price">Unit Price</th>
+                    <th class="col-qty">Qty</th>
+                    <th class="col-disc">Discount</th>
+                    <th class="col-vat">VAT</th>
+                    <th class="col-amt">Amount</th>
+                    <th class="col-del no-print"></th>
+                </tr>
+            </thead>
+            <tbody id="invoice-body">
+                <!-- Items will be cleared and added by JS on load -->
+            </tbody>
+        </table>
+
+        <!-- Unified Payment History & Financial Status -->
+        <section class="inv-prev-summary-container">
+            <div class="prev-summary-card">
+                <div class="prev-card-header">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <span class="prev-title">Payment History & Installments</span>
+                        <span id="invoice-status" class="badge-paid">PAID</span>
+                    </div>
+                    <span id="prev-payment-count" class="prev-badge">0 Payments</span>
+                </div>
+                <div class="prev-card-body">
+                    <div class="prev-history-table-wrapper">
+                        <table class="pay-log-table" id="payments-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Method</th>
+                                    <th>Amount</th>
+                                    <th class="no-print"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="payments-body">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                        <div class="add-payment-controls no-print" style="margin-top: 12px; display: flex; gap: 6px;">
+                            <input type="number" id="new-payment-amt" placeholder="Amount" style="width:90px; padding: 5px; border:1px solid var(--border); border-radius:4px; font-size:12px;">
+                            <input type="date" id="new-payment-date" style="padding: 5px; width:120px; border:1px solid var(--border); border-radius:4px; font-size:12px;">
+                            <select id="new-payment-method" style="padding: 5px; border:1px solid var(--border); border-radius:4px; font-size:12px;">
+                                <option value="Cash">Cash</option>
+                                <option value="Visa">Visa</option>
+                                <option value="Bank">Bank</option>
+                            </select>
+                            <button id="add-payment-btn" class="btn btn-dark" style="padding: 6px 10px; font-size: 11px;">Add Payment</button>
+                        </div>
+                    </div>
+                    
+                    <div class="prev-finance-info">
+                        <div class="prev-info-row">
+                            <span class="info-label">Total Amount</span>
+                            <span id="subtotal" class="info-val">0.00 AED</span>
+                        </div>
+                        <div class="prev-info-row">
+                            <span class="info-label">Total Paid</span>
+                            <span id="paid-amount" class="info-val">0.00 AED</span>
+                        </div>
+                        <div class="prev-info-row balance-row">
+                            <span class="info-label">Remaining Balance</span>
+                            <span id="remaining-amount" class="info-val highlight">0.00 AED</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="inv-footer">
+            <div class="inv-footer__terms">
+                <h4>Payment Terms & Conditions:</h4>
+                <p>Full fees must be paid before the course starts. In case of retraction from the course, fees are refundable only during 48 hours from the registration date, exclusive of 25% course fees plus registration fees. Paid fees are non-refundable in case of retraction from the course for whatever reason.</p>
+            </div>
+            <div class="inv-footer__sig">
+                <p class="sig-title">Authorized Signature</p>
+                <img src="assets/logo.png" alt="Seal" class="sig-seal">
+                <div class="sig-line"></div>
+                <p class="sig-thanks">Thank you for your business!</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- History Modal -->
+    <div id="history-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="font-family:'Playfair Display', serif; color:var(--maroon); margin-bottom:15px;">Invoice History</h2>
+            <div class="search-box" style="display:flex; gap:10px; margin-bottom: 20px;">
+                <input type="text" id="search-input" placeholder="Search by Invoice # or Name" style="flex:1; padding:8px; border:1px solid #ccc; border-radius:4px;">
+                <button id="search-btn" class="btn btn-dark">Search</button>
+            </div>
+            <div class="history-list" style="max-height:400px; overflow-y:auto;">
+                <table class="inv-table" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="padding:10px;">Date</th>
+                            <th style="padding:10px;">Invoice #</th>
+                            <th style="padding:10px;">Student Name</th>
+                            <th style="padding:10px;">Status</th>
+                            <th style="padding:10px; text-align:right;">Total</th>
+                            <th style="padding:10px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-list-body">
+                        <!-- Results go here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer" style="padding-top: 20px; border-top: 1px solid #eee; margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <button id="prev-page-btn" class="btn btn-dark" style="padding: 6px 15px; font-size: 13px;">Previous</button>
+                <span id="page-number-display" style="font-size: 14px; font-weight: 600; color: #555;">Page 1</span>
+                <button id="next-page-btn" class="btn btn-dark" style="padding: 6px 15px; font-size: 13px;">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="invoice-service.js"></script>
+    <script src="script.js"></script>
+
+    <!-- Developer Footer -->
+    <footer class="dev-footer no-print">
+        <p>Developed by <a href="https://www.facebook.com/AhmedAbdElnaby93/" target="_blank">Ahmed Abdelnaby</a></p>
+    </footer>
+</body>
+</html>

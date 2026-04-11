@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Zad Institute Invoice Generator</title>
+    <link rel="stylesheet" href="login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-header">
+            <img src="assets/logo.png" alt="Zad Institute Logo" class="login-logo">
+            <h1>Zad Institute</h1>
+            <p>Education Support Services</p>
+        </div>
+        <div class="login-body">
+            <p class="login-instruction">Sign in to access the invoice generator.</p>
+            <div class="input-group" style="margin-bottom: 12px;">
+                <input type="email" id="email" placeholder="Email Address" autofocus>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password">
+                <div id="error-msg" class="error-msg">Incorrect credentials. Please try again.</div>
+            </div>
+            <button id="login-btn" class="login-btn">Access Dashboard</button>
+        </div>
+        <div class="login-footer">
+            &copy; 2026 Zad Institute. All rights reserved.
+        </div>
+    </div>
+    <script src="login.js"></script>
+</body>
+</html>
